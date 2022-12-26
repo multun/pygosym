@@ -26,9 +26,7 @@ def get_first_exec_seg(elf_file: ELFFile) -> Optional[Segment]:
 def get_text_addr(elf_file) -> Optional[int]:
     text = get_first_exec_seg(elf_file)
     if text is None:
-        logger.info("couldn't find an executable section")
         return None
-
     return text["p_vaddr"]
 
 
@@ -45,7 +43,7 @@ def load_gofuncs(path):
         elf_file = ELFFile(f)
         text_addr = get_text_addr(elf_file)
         if text_addr is None:
-            logger.warning("couldn't find .text")
+            print("couldn't find .text", file=sys.stderr)
             exit(1)
 
         return go_funcs(elf_file, text_addr)
